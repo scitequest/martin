@@ -1,0 +1,82 @@
+{
+  "last_used_project_index": 0,
+  "projects": [
+    {
+      "name": "Test Project",
+      "description": "Some form of description",
+      "tags": [
+        "a",
+        "mother",
+        "pregnant",
+        "z"
+      ],
+      "default_incubations": [
+        {
+          "solution": "Solution 1",
+          "stock_concentration": {
+            "value": 10.0,
+            "unit": "percent"
+          },
+          "final_concentration": {
+            "value": 5.0,
+            "unit": "percent"
+          },
+          "incubation_time": "PT16M40S"
+        },
+        {
+          "solution": "Solution 2",
+          "stock_concentration": {
+            "value": 200.0,
+            "unit": "micro_mol_per_litre"
+          },
+          "final_concentration": {
+            "value": 100.0,
+            "unit": "micro_mol_per_litre"
+          },
+          "incubation_time": "PT16M40S"
+        }
+      ],
+      "default_image": {
+        "imager": "Imager name",
+        "pixel_binning": 1,
+        "exposure_time": "PT0S"
+      }
+    },
+    {
+      "name": "New project",
+      "description": "",
+      "tags": [],
+      "default_incubations": [
+        {
+          "solution": "Solution 1",
+          "stock_concentration": {
+            "value": 10.0,
+            "unit": "percent"
+          },
+          "final_concentration": {
+            "value": 5.0,
+            "unit": "percent"
+          },
+          "incubation_time": "PT16M40S"
+        },
+        {
+          "solution": "Solution 2",
+          "stock_concentration": {
+            "value": 200.0,
+            "unit": "micro_mol_per_litre"
+          },
+          "final_concentration": {
+            "value": 100.0,
+            "unit": "micro_mol_per_litre"
+          },
+          "incubation_time": "PT16M40S"
+        }
+      ],
+      "default_image": {
+        "imager": "Imager name",
+        "pixel_binning": 1,
+        "exposure_time": "PT0S"
+      }
+    }
+  ]
+}

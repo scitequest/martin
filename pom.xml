@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.scijava</groupId>
+    <artifactId>pom-scijava</artifactId>
+    <version>34.1.0</version>
+    <relativePath />
+  </parent>
+
+  <groupId>com.scitequest</groupId>
+  <artifactId>martin</artifactId>
+  <version>0.10.0</version>
+
+  <name>MARTin</name>
+  <description>An application for the quantification of Microarrays based on ImageJ 2.x.</description>
+  <url>https://github.com/scitequest/martin</url>
+  <inceptionYear>2022</inceptionYear>
+
+  <organization>
+    <name>Scite Quest</name>
+    <url>https://github.com/scitequest</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>AGPL-3.0-or-later</name>
+      <url>https://www.gnu.org/licenses/agpl-3.0.en.html</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>Kai46</id>
+      <name>Kai Kreissner</name>
+    </developer>
+    <developer>
+      <id>b-faller</id>
+      <name>Benjamin Faller</name>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>None</name>
+    </contributor>
+  </contributors>
+
+  <mailingLists>
+    <mailingList>
+      <name>None</name>
+    </mailingList>
+  </mailingLists>
+
+  <scm>
+    <connection>scm:git:https://github.com/scitequest/martin.git</connection>
+    <developerConnection>scm:git:git@github.com/scitequest/martin.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/scitequest/martin</url>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/scitequest/martin/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://github.com/scitequest/martin/actions</url>
+  </ciManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
+    <main-class>com.scitequest.martin.MartinStandalone</main-class>
+
+    <allowedDuplicateClasses>${scijava.allowedDuplicateClasses},javax.json.*</allowedDuplicateClasses>
+
+    <license.licenseName>${project.licenses[0].name}</license.licenseName>
+    <license.licenseFile>LICENSE.txt</license.licenseFile>
+    <license.copyrightOwners>Kai Kreissner, Benjamin Faller</license.copyrightOwners>
+    <project.copyright>Copyright (C) 2023 ${license.copyrightOwners}</project.copyright>
+    <!-- File to convert to HTML
+    Files containing spaces must be quoted, e.g. "Scite Quest.txt"
+      -->
+    <project.markdownfiles>LICENSE_3RD_PARTY.md</project.markdownfiles>
+    <!-- Extra files to include in the application folder.
+    Files containing spaces must be quoted, e.g. "Scite Quest.txt"
+      -->
+    <project.appcontent>LICENSE.txt target/html</project.appcontent>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>scijava.public</id>
+      <url>https://maven.scijava.org/content/groups/public</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <!-- ImageJ for about everything -->
+    <dependency>
+      <groupId>net.imagej</groupId>
+      <artifactId>imagej</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.imagej</groupId>
+      <artifactId>imagej-legacy</artifactId>
+    </dependency>
+    <!-- Integral based normalize local contrast plugin -->
+    <dependency>
+      <groupId>mpicbg</groupId>
+      <artifactId>mpicbg_</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.dirs</groupId>
+      <artifactId>directories</artifactId>
+      <version>26</version>
+    </dependency>
+    <!-- JSON export/import support -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.14.2</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+      <version>1.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+      <version>1.1.4</version>
+    </dependency>
+    <!-- Look and Feel -->
+    <dependency>
+      <groupId>com.formdev</groupId>
+      <artifactId>flatlaf</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <!-- Test framework -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <!-- select non-aggregate reports -->
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <!-- http://mojo.codehaus.org/versions-maven-plugin/version-rules.html -->
+      <!-- This plugin is a utility to find outdated dependencies in your project. Just run mvn site and
+      the resulting HTML reports in target/site will let you know what plugins and dependencies are out of date.
+        -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.13.0</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependency-updates-report</report>
+              <report>plugin-updates-report</report>
+              <report>property-updates-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.7.3.0</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+            <failOnError>false</failOnError>
+            <plugins>
+              <plugin>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-plugin</artifactId>
+                <version>1.12.0</version>
+              </plugin>
+            </plugins>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.2.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>10.4</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <configLocation>checkstyle.xml</configLocation>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.8</version>
+          <executions>
+            <execution>
+              <id>default-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>default-report</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>5.0.0</version>
+          <executions>
+            <execution>
+              <id>get-the-git-infos</id>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+              <phase>initialize</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <generateGitPropertiesFile>false</generateGitPropertiesFile>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <!-- This copies the jar files declared by the Maven build into a single directory.
+            This makes it easy to assemble the final installer package -->
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
+              <includeScope>compile</includeScope>
+              <excludeScope>provided,system</excludeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <executions>
+          <execution>
+            <id>compile-markdown</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <executable>python3</executable>
+              <commandlineArgs>scripts/compile_markdown.py ${project.markdownfiles}</commandlineArgs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <!-- Only apply filtering to .properties to prevent filtering of binaries or other files -->
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>build-linux</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+              <execution>
+                <id>build-native-linux-app</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${project.basedir}</workingDirectory>
+                  <executable>python3</executable>
+                  <arguments>
+                    <argument>scripts/build_installer.py</argument>
+                    <argument>--jre-version</argument>
+                    <argument>${maven.compiler.release}</argument>
+                    <argument>--jdk-home</argument>
+                    <argument>${java.home}</argument>
+                    <argument>--jre-home</argument>
+                    <argument>${env.JRE_HOME}</argument>
+                    <argument>--license-name</argument>
+                    <argument>${project.licenses[0].name}</argument>
+                    <argument>--linux</argument>
+                    <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+                    <argument>${main-class}</argument>
+                    <argument>--</argument>
+                    <argument>--name</argument>
+                    <argument>${project.name}</argument>
+                    <argument>--description</argument>
+                    <argument>${project.description}</argument>
+                    <argument>--app-version</argument>
+                    <argument>${project.version}</argument>
+                    <argument>--app-content</argument>
+                    <argument>${project.appcontent}</argument>
+                    <argument>--copyright</argument>
+                    <argument>${project.copyright}</argument>
+                    <argument>--vendor</argument>
+                    <argument>${project.organization.name}</argument>
+                    <argument>--about-url</argument>
+                    <argument>${project.url}</argument>
+                    <argument>--license-file</argument>
+                    <argument>${license.licenseFile}</argument>
+                    <argument>--icon</argument>
+                    <argument>icon.png</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>build-windows</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+              <execution>
+                <id>build-native-windows-app</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${project.basedir}</workingDirectory>
+                  <executable>python3</executable>
+                  <arguments>
+                    <argument>scripts/build_installer.py</argument>
+                    <argument>--jre-version</argument>
+                    <argument>${maven.compiler.release}</argument>
+                    <argument>--jdk-home</argument>
+                    <argument>${java.home}</argument>
+                    <argument>--jre-home</argument>
+                    <argument>${env.JRE_HOME}</argument>
+                    <argument>--license-name</argument>
+                    <argument>${project.licenses[0].name}</argument>
+                    <argument>--windows</argument>
+                    <argument>${project.build.directory}/${project.build.finalName}.jar</argument>
+                    <argument>${main-class}</argument>
+                    <argument>--</argument>
+                    <argument>--name</argument>
+                    <argument>${project.name}</argument>
+                    <argument>--description</argument>
+                    <argument>${project.description}</argument>
+                    <argument>--app-version</argument>
+                    <argument>${project.version}</argument>
+                    <argument>--app-content</argument>
+                    <argument>${project.appcontent}</argument>
+                    <argument>--copyright</argument>
+                    <argument>${project.copyright}</argument>
+                    <argument>--vendor</argument>
+                    <argument>${project.organization.name}</argument>
+                    <argument>--about-url</argument>
+                    <argument>${project.url}</argument>
+                    <argument>--license-file</argument>
+                    <argument>${license.licenseFile}</argument>
+                    <argument>--icon</argument>
+                    <argument>icon.ico</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

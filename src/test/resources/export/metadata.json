@@ -1,0 +1,30 @@
+{
+  "version": "0.7.0",
+  "datetime": "2022-06-14T15:04:33+02:00",
+  "image": {
+    "created": "2022-06-13T00:00+02:00",
+    "imager": "Best imager ever",
+    "pixel_binning": 3,
+    "exposure_time": "PT30S"
+  },
+  "incubations": [
+    {
+      "solution": "Potassium",
+      "stock_concentration": { "value": 2.3, "unit": "micro_mol_per_litre"},
+      "final_concentration": { "value": 5.8, "unit": "percent"},
+      "incubation_time": "PT15S"
+    }
+  ],
+  "patient": {
+    "id": "AB123",
+    "name": "Benjamin",
+    "tags": [
+      "mother",
+      "pregnant"
+    ]
+  },
+  "project": {
+    "name": "Project Name",
+    "description": "Project Description"
+  }
+}

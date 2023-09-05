@@ -1,0 +1,4 @@
+package com.scitequest.martin.settings.exception;
+
+public final class OneElementRequiredException extends ListableException {
+}

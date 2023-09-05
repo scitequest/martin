@@ -1,0 +1,3 @@
+row	col	adjusted_average	adjusted_average_std_deviation	relative_adjusted_average_std_deviation	normalized_average	normalized_average_std_deviation	relative_normalized_average_std_deviation
+0	0	10.0	0.0	0.0	1.0	0.0	0.0
+0	1	5.5	0.5	9.090909090909092	0.55	0.04999999999999947	9.090909090908994

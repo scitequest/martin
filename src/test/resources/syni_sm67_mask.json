@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "name": "SYNI sm67 mask",
+  "description": "",
+  "slide_width": 1221,
+  "slide_height": 414,
+  "x_inset": 81,
+  "y_inset": 60,
+  "super_grid_cols": 2,
+  "super_grid_rows": 1,
+  "horizontal_spot_field_spacing": [],
+  "vertical_spot_field_spacing": [
+    22
+  ],
+  "spot_field_width": 469,
+  "spot_field_height": 312,
+  "spot_field_n_rows": 16,
+  "spot_field_n_columns": 24,
+  "measure_field_shape": "CIRCLE",
+  "measure_field_width": 14,
+  "measure_field_height": 14
+}

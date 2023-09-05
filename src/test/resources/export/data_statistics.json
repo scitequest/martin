@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "row": 0,
+      "col": 0,
+      "adjusted_average": 10.0,
+      "adjusted_average_std_deviation": 0.0,
+      "relative_adjusted_average_std_deviation": 0.0,
+      "normalized_average": 1.0,
+      "normalized_average_std_deviation": 0.0,
+      "relative_normalized_average_std_deviation": 0.0
+    },
+    {
+      "row": 0,
+      "col": 1,
+      "adjusted_average": 5.5,
+      "adjusted_average_std_deviation": 0.5,
+      "relative_adjusted_average_std_deviation": 9.090909090909092,
+      "normalized_average": 0.55,
+      "normalized_average_std_deviation": 0.04999999999999947,
+      "relative_normalized_average_std_deviation": 9.090909090908994
+    }
+  ]
+}

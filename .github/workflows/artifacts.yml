@@ -1,0 +1,65 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CD build release artifacts
+
+on:
+  push:
+    tags:
+      - v*
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+
+  build-installer:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'ubuntu-latest', 'windows-latest' ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+      - name: Set up JRE 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '19'
+          cache: maven
+      - name: Build native Linux RPM installer
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          export JRE_HOME="${{ env.JAVA_HOME_11_X64 }}"
+          mvn -B install -P build-linux -Dmaven.test.skip
+      - uses: actions/upload-artifact@v3
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: standalone-linux
+          path: target/installer/*.rpm
+          if-no-files-found: error
+      - name: Build native Windows MSI installer
+        if: matrix.os == 'windows-latest'
+        run: |
+          $Env:JRE_HOME = "${{ env.JAVA_HOME_11_X64 }}"
+          mvn -B install -P build-windows '-Dmaven.test.skip'
+      - uses: actions/upload-artifact@v3
+        if: matrix.os == 'windows-latest'
+        with:
+          name: standalone-windows
+          path: target/installer/*.msi
+          if-no-files-found: error

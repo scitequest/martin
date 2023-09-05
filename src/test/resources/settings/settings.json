@@ -1,0 +1,135 @@
+{
+  "version": "0.1.1",
+  "display": {
+    "theme": "FLAT_MAC_DARK_LAF",
+    "colors": {
+      "deletion_rectangle": "#FF0000",
+      "halfline": "#0000FF",
+      "measure_circle": "#FFFF00",
+      "slide": "#0000FF",
+      "spotfield": "#00FF00"
+    },
+    "enable_button_help": true,
+    "show_measure_circles": true,
+    "show_spotfield_grids": true
+  },
+  "export": {
+    "export_tsv": true,
+    "export_json": true,
+    "save_annotated_image": true,
+    "save_whole_image": true
+  },
+  "mask": {
+    "last_used_mask_index": 0,
+    "spot_field_last_measurepoint_index": 383,
+    "masks": [
+      {
+        "name": "New Slide Mask",
+        "description": "",
+        "slide_width": 1500,
+        "slide_height": 500,
+        "x_inset": 10,
+        "y_inset": 15,
+        "super_grid_rows": 1,
+        "super_grid_cols": 2,
+        "vertical_spot_field_spacing": [
+          13
+        ],
+        "horizontal_spot_field_spacing": [],
+        "spot_field_width": 465,
+        "spot_field_height": 312,
+        "spot_field_n_rows": 16,
+        "spot_field_n_columns": 24,
+        "measure_field_shape": "CIRCLE",
+        "measure_field_width": 10,
+        "measure_field_height": 10
+      }
+    ]
+  },
+  "measurement": {
+    "invert_lut": true,
+    "subtract_background": true
+  },
+  "project": {
+    "last_used_project_index": 0,
+    "projects": [
+      {
+        "default_image": {
+          "exposure_time": "PT0S",
+          "imager": "Imager name",
+          "pixel_binning": 1
+        },
+        "default_incubations": [
+          {
+            "solution": "Solution 1",
+            "stock_concentration": {
+              "value": 10.0,
+              "unit": "percent"
+            },
+            "final_concentration": {
+              "value": 5.0,
+              "unit": "percent"
+            },
+            "incubation_time": "PT16M40S"
+          },
+          {
+            "solution": "Solution 2",
+            "stock_concentration": {
+              "value": 200.0,
+              "unit": "micro_mol_per_litre"
+            },
+            "final_concentration": {
+              "value": 100.0,
+              "unit": "micro_mol_per_litre"
+            },
+            "incubation_time": "PT16M40S"
+          }
+        ],
+        "description": "Some form of description",
+        "name": "Test Project",
+        "tags": [
+          "a",
+          "mother",
+          "pregnant",
+          "z"
+        ]
+      },
+      {
+        "default_image": {
+          "exposure_time": "PT0S",
+          "imager": "Imager name",
+          "pixel_binning": 1
+        },
+        "default_incubations": [
+          {
+            "solution": "Solution 1",
+            "stock_concentration": {
+              "value": 10.0,
+              "unit": "percent"
+            },
+            "final_concentration": {
+              "value": 5.0,
+              "unit": "percent"
+            },
+            "incubation_time": "PT16M40S"
+          },
+          {
+            "solution": "Solution 2",
+            "stock_concentration": {
+              "value": 200.0,
+              "unit": "micro_mol_per_litre"
+            },
+            "final_concentration": {
+              "value": 100.0,
+              "unit": "micro_mol_per_litre"
+            },
+            "incubation_time": "PT16M40S"
+          }
+        ],
+        "description": "",
+        "name": "New Project",
+        "tags": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "spot": 0,
+      "row": 0,
+      "col": 0,
+      "min": 1.1,
+      "max": 3.5,
+      "mean": 2.4,
+      "std_deviation": 6.3,
+      "mean_minus_min": 2.4,
+      "normalized_mean": 0.8
+    },
+    {
+      "spot": 0,
+      "row": 0,
+      "col": 1,
+      "min": 1.2,
+      "max": 3.7,
+      "mean": 2.5,
+      "std_deviation": 7.0,
+      "mean_minus_min": 2.5,
+      "normalized_mean": 1.0
+    },
+    {
+      "spot": 1,
+      "row": 0,
+      "col": 0,
+      "min": 2.0,
+      "max": 4.5,
+      "mean": 2.25,
+      "std_deviation": 6.3,
+      "mean_minus_min": 2.25,
+      "normalized_mean": 0.7
+    },
+    {
+      "spot": 1,
+      "row": 0,
+      "col": 1,
+      "min": 2.0,
+      "max": 4.5,
+      "mean": 2.25,
+      "std_deviation": 6.3,
+      "mean_minus_min": 2.25,
+      "normalized_mean": 0.7
+    }
+  ]
+}

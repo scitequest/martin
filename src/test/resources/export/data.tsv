@@ -1,0 +1,5 @@
+spot	row	col	min	max	mean	std_deviation	mean_minus_min	normalized_mean
+0	0	0	1.1	3.5	2.4	6.3	2.4	0.8
+0	0	1	1.2	3.7	2.5	7.0	2.5	1.0
+1	0	0	2.0	4.5	2.25	6.3	2.25	0.7
+1	0	1	2.0	4.5	2.25	6.3	2.25	0.7
