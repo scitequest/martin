@@ -1,6 +1,6 @@
 # MARTin
 
-MARTin is an application for the quantification of Microarrays based on ImageJ 2.x.
+MicroaArray Rastering Tool (MARTin) is an application for the quantification of Microarrays based on ImageJ 2.x.
 
 ## Licensing
 
