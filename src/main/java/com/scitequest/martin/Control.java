@@ -824,13 +824,14 @@ public final class Control implements Controlable {
      */
     private static Data measureValues(ImagePlus iPlus, Parameters parameters) {
         List<Geometry> spots = parameters.getSpots();
+        int maxSpotsPerSpotfield = spots.size() / parameters.getNumberOfSpotfields();
 
         List<Measurepoint> values = new ArrayList<>();
         for (int spot = 0; spot < parameters.getNumberOfSpotfields(); spot++) {
             for (int i = 0; i < parameters.getSpotsPerSpotfield(); i++) {
                 int row = i / parameters.getColumnsPerSpotfield();
                 int col = i % parameters.getColumnsPerSpotfield();
-                int absIdx = spot * parameters.getSpotsPerSpotfield() + i;
+                int absIdx = spot * maxSpotsPerSpotfield + i;
 
                 ImageStatistics imageStats = getSpotStats(iPlus, spots.get(absIdx));
                 if (Double.isNaN(imageStats.mean)) {

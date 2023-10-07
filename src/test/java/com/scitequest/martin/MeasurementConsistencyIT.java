@@ -145,4 +145,74 @@ public class MeasurementConsistencyIT {
         control.doMeasureAndExport(measurementFolder.toPath(), dummyMetadata);
         assertTrue(control.checkIntegrity(measurementFolder.toPath()).isSuccess());
     }
+
+    @Test
+    public void testMeasurementAreSequentialSpots()
+            throws SecurityException, IOException, JsonParseException {
+        Settings settings = Settings.load(settingsPath);
+        // Disable invert LUT for the checkerboard.
+        settings.getMeasurementSettings().setInvertLut(false);
+        // Load and activate the checker mask.
+        settings.getMaskSettings().importMask(Paths.get("src/test/resources/checker.json"));
+        int numMasks = settings.getMaskSettings().getNumberOfMasks();
+        settings.getMaskSettings().setLastUsedMaskIndex(numMasks - 1);
+        // Set the last measurepoint index to the maximum.
+        settings.getMaskSettings().setLastUsedMaskLastMeasurePointIndexToMax();
+        settings.store();
+        settings.save();
+
+        String imagePath = "src/test/resources/img/checker.tif";
+        Control control = Control.headless(ij, IJ.openImage(imagePath), settingsPath);
+
+        Data data = control.doMeasure();
+        assertCheckerImgDataSymmetric(data);
+    }
+
+    @Test
+    public void testLastSpotfieldIndexNotAffectingMeasurementPositions()
+            throws SecurityException, IOException, JsonParseException {
+        Settings settings = Settings.load(settingsPath);
+        // Disable invert LUT for the checkerboard.
+        settings.getMeasurementSettings().setInvertLut(false);
+        // Load and activate the checker mask.
+        settings.getMaskSettings().importMask(Paths.get("src/test/resources/checker.json"));
+        int numMasks = settings.getMaskSettings().getNumberOfMasks();
+        settings.getMaskSettings().setLastUsedMaskIndex(numMasks - 1);
+        // Set the last measurepoint index to less than the maximum.
+        settings.getMaskSettings().setLastMeasurePointIndex(7);
+        settings.store();
+        settings.save();
+
+        String imagePath = "src/test/resources/img/checker.tif";
+        Control control = Control.headless(ij, IJ.openImage(imagePath), settingsPath);
+
+        Data data = control.doMeasure();
+        assertCheckerImgDataSymmetric(data);
+    }
+
+    /**
+     * The checker test image contains 24 gray patches with values increasing each
+     * by 10. Thus, for a mask with 12 measurements per spotfield the values of the
+     * right spotfield must be the value for the respective measurepoint of the left
+     * spotfield + 120. This way we are able to test that measurepoints are measured
+     * sequentially. More importantly, it is possible to test that if the last
+     * measurepoint index is less than the maximum the measurements are not shifted
+     * but properly skipped.
+     *
+     * @param data the data to assert for symmetry
+     */
+    private static void assertCheckerImgDataSymmetric(Data data) {
+        int numSpotsPerSpotfield = data.getValues().size() / 2;
+        for (int i = 0; i < numSpotsPerSpotfield; i++) {
+            double leftMeasurepointMean = data.getValues()
+                    .get(i)
+                    .getMeasurePoint()
+                    .getMean();
+            double rightMeasurepointMean = data.getValues()
+                    .get(i + numSpotsPerSpotfield)
+                    .getMeasurePoint()
+                    .getMean();
+            assertEquals(leftMeasurepointMean, rightMeasurepointMean - 120, 1e-4);
+        }
+    }
 }
