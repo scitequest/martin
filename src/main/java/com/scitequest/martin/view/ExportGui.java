@@ -533,9 +533,6 @@ public final class ExportGui extends JDialog {
         IntColumn spotfieldColumn = new IntColumn("Spotfield");
         IntColumn rowColumn = new IntColumn("Row");
         IntColumn columnColumn = new IntColumn("Column");
-        IntColumn xColumn = new IntColumn("x Coordinate");
-        IntColumn yColumn = new IntColumn("y Coordinate");
-        IntColumn diameterColumn = new IntColumn("Diameter");
         DoubleColumn minColumn = new DoubleColumn("Min");
         DoubleColumn maxColumn = new DoubleColumn("Max");
         DoubleColumn meanColumn = new DoubleColumn("Mean");
@@ -560,9 +557,6 @@ public final class ExportGui extends JDialog {
         table.add(spotfieldColumn);
         table.add(rowColumn);
         table.add(columnColumn);
-        table.add(xColumn);
-        table.add(yColumn);
-        table.add(diameterColumn);
         table.add(minColumn);
         table.add(maxColumn);
         table.add(meanColumn);
