@@ -31,14 +31,18 @@ public class CustomIjKeyListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_UP) {
+            // This sets e to only contain the up-key.
+            e.setKeyCode(KeyEvent.VK_UP);
             ijKeyListener.keyPressed(e);
             return;
         }
         if (keyCode == KeyEvent.VK_DOWN) {
+            e.setKeyCode(KeyEvent.VK_DOWN);
             ijKeyListener.keyPressed(e);
             return;
         }
         if (keyCode == KeyEvent.VK_SPACE) {
+            e.setKeyCode(KeyEvent.VK_SPACE);
             ijKeyListener.keyPressed(e);
             return;
         }
