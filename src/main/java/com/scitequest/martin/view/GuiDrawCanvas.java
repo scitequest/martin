@@ -214,6 +214,11 @@ public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
             control.toggleFilter();
             return;
         }
+        // Measure
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_M) {
+            control.measure();
+            return;
+        }
     }
 
     @Override

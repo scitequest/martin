@@ -446,7 +446,8 @@ public final class Gui extends JFrame implements View, MouseInputListener {
                     Const.bundle.getString("infoText.noHoverRGBinput.text"),
                     Const.bundle.getString("infoText.noHover.keyShortcut.reset.text"),
                     Const.bundle.getString("infoText.noHover.keyShortcut.autofit.text"),
-                    Const.bundle.getString("infoText.noHover.keyShortcut.filter.text")
+                    Const.bundle.getString("infoText.noHover.keyShortcut.filter.text"),
+                    Const.bundle.getString("infoText.noHover.keyShortcut.measure.text")
             };
             noHoverMessageIndex = (noHoverMessageIndex + i) % guideLabels.length;
             // Wrap around
