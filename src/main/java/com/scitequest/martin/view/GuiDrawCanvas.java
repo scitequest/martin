@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import com.scitequest.martin.CustomIjKeyListener;
 import com.scitequest.martin.DrawOptions;
 import com.scitequest.martin.settings.Settings;
 
@@ -55,6 +56,9 @@ public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
      */
     public GuiDrawCanvas(Controlable control, ImagePlus iPlus, Settings settings) {
         super(iPlus);
+        CustomIjKeyListener modifiedIjKeyListener = new CustomIjKeyListener(ij.getKeyListeners()[0]);
+        removeKeyListener(ij);
+        addKeyListener(modifiedIjKeyListener);
         addKeyListener(this);
         this.control = control;
         this.settings = settings;
@@ -197,6 +201,7 @@ public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
         // Reset
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
             control.repositionSlide();
+            control.update();
             return;
         }
         // Autofit
