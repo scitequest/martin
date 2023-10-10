@@ -49,9 +49,14 @@ public class CustomIjKeyListener implements KeyListener {
     }
 
     /*
-     * This removes all keyReleased events.
+     * This removes all keyReleased events except for the space-key.
      */
     @Override
     public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            e.setKeyCode(KeyEvent.VK_SPACE);
+            ijKeyListener.keyReleased(e);
+            return;
+        }
     }
 }
