@@ -46,6 +46,16 @@ public class CustomIjKeyListener implements KeyListener {
             ijKeyListener.keyPressed(e);
             return;
         }
+        if (keyCode == KeyEvent.VK_PLUS) {
+            e.setKeyCode(KeyEvent.VK_PLUS);
+            ijKeyListener.keyPressed(e);
+            return;
+        }
+        if (keyCode == KeyEvent.VK_MINUS) {
+            e.setKeyCode(KeyEvent.VK_MINUS);
+            ijKeyListener.keyPressed(e);
+            return;
+        }
     }
 
     /*
