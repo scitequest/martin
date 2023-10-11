@@ -10,63 +10,48 @@ import java.awt.event.KeyListener;
 public class CustomIjKeyListener implements KeyListener {
 
     private final KeyListener ijKeyListener;
+    private final int[] validKeys = new int[] { KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_SPACE, KeyEvent.VK_PLUS,
+            KeyEvent.VK_MINUS, KeyEvent.VK_ADD, KeyEvent.VK_SUBTRACT, KeyEvent.VK_EQUALS };
 
     public CustomIjKeyListener(KeyListener ijKeyListener) {
         this.ijKeyListener = ijKeyListener;
     }
 
     /*
-     * This removes all keyTyped events.
+     * This method checks if the KeyEvent uses an accepted key.
+     * If valid the key code is returned if invalid an empty OptionalInt is
+     * returned.
      */
+    private boolean validateKey(KeyEvent e) {
+        for (int i : validKeys) {
+            if (i == e.getKeyCode()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
-
+        if (validateKey(e)) {
+            ijKeyListener.keyTyped(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
+                    e.getKeyChar(), e.getKeyLocation()));
+        }
     }
 
-    /*
-     * This removes all keyPressed events except the ones specified in the
-     * if-statements below.
-     */
     @Override
     public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_UP) {
-            // This sets e to only contain the up-key.
-            e.setKeyCode(KeyEvent.VK_UP);
-            ijKeyListener.keyPressed(e);
-            return;
-        }
-        if (keyCode == KeyEvent.VK_DOWN) {
-            e.setKeyCode(KeyEvent.VK_DOWN);
-            ijKeyListener.keyPressed(e);
-            return;
-        }
-        if (keyCode == KeyEvent.VK_SPACE) {
-            e.setKeyCode(KeyEvent.VK_SPACE);
-            ijKeyListener.keyPressed(e);
-            return;
-        }
-        if (keyCode == KeyEvent.VK_PLUS) {
-            e.setKeyCode(KeyEvent.VK_PLUS);
-            ijKeyListener.keyPressed(e);
-            return;
-        }
-        if (keyCode == KeyEvent.VK_MINUS) {
-            e.setKeyCode(KeyEvent.VK_MINUS);
-            ijKeyListener.keyPressed(e);
-            return;
+        if (validateKey(e)) {
+            ijKeyListener.keyPressed(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
+                    e.getKeyChar(), e.getKeyLocation()));
         }
     }
 
-    /*
-     * This removes all keyReleased events except for the space-key.
-     */
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            e.setKeyCode(KeyEvent.VK_SPACE);
-            ijKeyListener.keyReleased(e);
-            return;
+        if (validateKey(e)) {
+            ijKeyListener.keyReleased(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
+                    e.getKeyChar(), e.getKeyLocation()));
         }
     }
 }
