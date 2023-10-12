@@ -49,30 +49,8 @@ public class CustomIjKeyListener implements KeyListener {
         return null;
     }
 
-    /*
-     * This method does basically the same as getValidatedKey, the main difference
-     * is that it is adjusted to keyTyped events.
-     */
-    private KeyEvent getValidatedKeyTyped(KeyEvent e) {
-        for (int i = 0; i < keyChars.length; i++) {
-            if (keyChars[i] == e.getKeyChar()) {
-                return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, KeyEvent.VK_UNDEFINED,
-                        keyChars[i], KeyEvent.KEY_LOCATION_UNKNOWN);
-            }
-        }
-        if (e.getKeyChar() == '=') {
-            return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, KeyEvent.VK_UNDEFINED,
-                    '+', KeyEvent.KEY_LOCATION_UNKNOWN);
-        }
-        return null;
-    }
-
     @Override
     public void keyTyped(KeyEvent e) {
-        e = getValidatedKeyTyped(e);
-        if (e != null) {
-            ijKeyListener.keyTyped(e);
-        }
     }
 
     @Override
