@@ -10,8 +10,20 @@ import java.awt.event.KeyListener;
 public class CustomIjKeyListener implements KeyListener {
 
     private final KeyListener ijKeyListener;
+
+    /*
+     * Array of allowed keycodes
+     */
     private final int[] validKeys = new int[] { KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_SPACE, KeyEvent.VK_PLUS,
-            KeyEvent.VK_MINUS, KeyEvent.VK_ADD, KeyEvent.VK_SUBTRACT, KeyEvent.VK_EQUALS };
+            KeyEvent.VK_MINUS, KeyEvent.VK_ADD, KeyEvent.VK_SUBTRACT };
+    /*
+     * List of chars that represent the keycodes of validKeys.
+     * This mainly exists to catch to allow the use of the plus sign without any
+     * annoyances. Without this the key char of plus changes depending on the key
+     * modifier held down at the same time.
+     */
+    private final char[] keyChars = new char[] { KeyEvent.CHAR_UNDEFINED, KeyEvent.CHAR_UNDEFINED, ' ', '+',
+            '-', '+', '-' };
 
     public CustomIjKeyListener(KeyListener ijKeyListener) {
         this.ijKeyListener = ijKeyListener;
@@ -19,35 +31,45 @@ public class CustomIjKeyListener implements KeyListener {
 
     /*
      * This method checks if the KeyEvent uses an accepted key.
-     * If valid the key code is returned if invalid an empty OptionalInt is
-     * returned.
+     * If valid a Key event without any modifiers is returned.
+     * If the user typed = a key event for + is returned, this is a special case to
+     * adress ANSI-Keyboards.
      */
-    private boolean validateKey(KeyEvent e) {
-        for (int i : validKeys) {
-            if (i == e.getKeyCode()) {
-                return true;
+    private KeyEvent getValidatedKey(KeyEvent e) {
+        for (int i = 0; i < validKeys.length; i++) {
+            if (validKeys[i] == e.getKeyCode()) {
+                return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, validKeys[i],
+                        keyChars[i], e.getKeyLocation());
             }
         }
-        return false;
+        if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
+            return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, KeyEvent.VK_PLUS,
+                    '+', e.getKeyLocation());
+        }
+        return null;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (validateKey(e)) {
+        e = getValidatedKey(e);
+        if (e != null) {
+            System.out.println(e.toString());
             ijKeyListener.keyTyped(e);
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (validateKey(e)) {
+        e = getValidatedKey(e);
+        if (e != null) {
             ijKeyListener.keyPressed(e);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (validateKey(e)) {
+        e = getValidatedKey(e);
+        if (e != null) {
             ijKeyListener.keyReleased(e);
         }
     }
