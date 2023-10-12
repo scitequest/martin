@@ -34,24 +34,21 @@ public class CustomIjKeyListener implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         if (validateKey(e)) {
-            ijKeyListener.keyTyped(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
-                    e.getKeyChar(), e.getKeyLocation()));
+            ijKeyListener.keyTyped(e);
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (validateKey(e)) {
-            ijKeyListener.keyPressed(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
-                    e.getKeyChar(), e.getKeyLocation()));
+            ijKeyListener.keyPressed(e);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         if (validateKey(e)) {
-            ijKeyListener.keyReleased(new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, e.getKeyCode(),
-                    e.getKeyChar(), e.getKeyLocation()));
+            ijKeyListener.keyReleased(e);
         }
     }
 }
