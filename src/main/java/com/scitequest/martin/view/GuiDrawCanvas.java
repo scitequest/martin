@@ -7,8 +7,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
@@ -28,7 +26,7 @@ import net.imagej.patcher.LegacyInjector;
  *
  * This also uses double buffering to prevent flickering during drawing.
  */
-public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
+public final class GuiDrawCanvas extends ImageCanvas {
 
     static {
         LegacyInjector.preinit();
@@ -56,10 +54,8 @@ public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
      */
     public GuiDrawCanvas(Controlable control, ImagePlus iPlus, Settings settings) {
         super(iPlus);
-        CustomIjKeyListener modifiedIjKeyListener = new CustomIjKeyListener(ij.getKeyListeners()[0]);
         removeKeyListener(ij);
-        addKeyListener(modifiedIjKeyListener);
-        addKeyListener(this);
+        addKeyListener(new CustomIjKeyListener(ij.getKeyListeners()[0], control));
         this.control = control;
         this.settings = settings;
         this.config = GraphicsEnvironment
@@ -190,38 +186,5 @@ public final class GuiDrawCanvas extends ImageCanvas implements KeyListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         super.mouseClicked(e);
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // Reset
-        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
-            control.repositionSlide();
-            control.update();
-            return;
-        }
-        // Autofit
-        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A) {
-            control.measureFieldFit();
-            return;
-        }
-        // Filter
-        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F) {
-            control.toggleFilter();
-            return;
-        }
-        // Measure
-        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_M) {
-            control.measure();
-            return;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
     }
 }

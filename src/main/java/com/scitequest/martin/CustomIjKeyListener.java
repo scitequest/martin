@@ -2,6 +2,7 @@ package com.scitequest.martin;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import com.scitequest.martin.view.Controlable;
 
 /**
  * This class overrides the standard ImageJ KeyListener.
@@ -10,6 +11,7 @@ import java.awt.event.KeyListener;
 public class CustomIjKeyListener implements KeyListener {
 
     private final KeyListener ijKeyListener;
+    private final Controlable control;
 
     /*
      * Array of allowed keycodes
@@ -25,8 +27,9 @@ public class CustomIjKeyListener implements KeyListener {
     private final char[] keyChars = new char[] { KeyEvent.CHAR_UNDEFINED, KeyEvent.CHAR_UNDEFINED, ' ', '+',
             '-', '+', '-' };
 
-    public CustomIjKeyListener(KeyListener ijKeyListener) {
+    public CustomIjKeyListener(KeyListener ijKeyListener, Controlable control) {
         this.ijKeyListener = ijKeyListener;
+        this.control = control;
     }
 
     /*
@@ -55,6 +58,28 @@ public class CustomIjKeyListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        // Reset
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
+            control.repositionSlide();
+            control.update();
+            return;
+        }
+        // Autofit
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A) {
+            control.measureFieldFit();
+            return;
+        }
+        // Filter
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F) {
+            control.toggleFilter();
+            return;
+        }
+        // Measure
+        if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_M) {
+            control.measure();
+            return;
+        }
+        // Standard ImageJ KeyEvents
         e = getValidatedKey(e);
         if (e != null) {
             ijKeyListener.keyPressed(e);
