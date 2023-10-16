@@ -2,6 +2,8 @@ package com.scitequest.martin;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
+
 import com.scitequest.martin.view.Controlable;
 
 /**
@@ -13,43 +15,36 @@ public class CustomIjKeyListener implements KeyListener {
     private final KeyListener ijKeyListener;
     private final Controlable control;
 
-    /*
-     * Array of allowed keycodes
+    /**
+     * List of key codes that are not filtered and passed to ImageJ as is.
      */
-    private final int[] validKeys = new int[] { KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_SPACE, KeyEvent.VK_PLUS,
-            KeyEvent.VK_MINUS, KeyEvent.VK_ADD, KeyEvent.VK_SUBTRACT };
-    /*
-     * List of chars that represent the keycodes of validKeys.
-     * This mainly exists to catch to allow the use of the plus sign without any
-     * annoyances. Without this the key char of plus changes depending on the key
-     * modifier held down at the same time.
+    private static final List<Integer> validKeyCodes = List.of(
+            KeyEvent.VK_UP, KeyEvent.VK_DOWN,
+            KeyEvent.VK_EQUALS, KeyEvent.VK_MINUS,
+            KeyEvent.VK_SPACE);
+
+    /**
+     * List of key characters that are not filtered and passed to ImageJ as is.
      */
-    private final char[] keyChars = new char[] { KeyEvent.CHAR_UNDEFINED, KeyEvent.CHAR_UNDEFINED, ' ', '+',
-            '-', '+', '-' };
+    private static final List<Character> validKeyChars = List.of('-', '+', '=');
 
     public CustomIjKeyListener(KeyListener ijKeyListener, Controlable control) {
         this.ijKeyListener = ijKeyListener;
         this.control = control;
     }
 
-    /*
-     * This method checks if the KeyEvent uses an accepted key.
-     * If valid a Key event without any modifiers is returned.
-     * If the user typed = a key event for + is returned, this is a special case to
-     * adress ANSI-Keyboards.
+    /**
+     * Checks a event if it is accepted and should be passed to the ImageJ key
+     * listener for further processing. This is used to filter only for key events
+     * that we want to let ImageJ process in order to prevent the user from
+     * executing native ImageJ macros.
+     *
+     * @param e the key event to check
+     * @return true if the key event should be passed to the ImageJ listener
      */
-    private KeyEvent getValidatedKey(KeyEvent e) {
-        for (int i = 0; i < validKeys.length; i++) {
-            if (validKeys[i] == e.getKeyCode()) {
-                return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, validKeys[i],
-                        keyChars[i], e.getKeyLocation());
-            }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
-            return new KeyEvent(e.getComponent(), e.getID(), e.getWhen(), 0, KeyEvent.VK_PLUS,
-                    '+', e.getKeyLocation());
-        }
-        return null;
+    private static boolean isAcceptedEvent(KeyEvent e) {
+        return validKeyCodes.contains(e.getKeyCode())
+                || validKeyChars.contains(e.getKeyChar());
     }
 
     @Override
@@ -62,34 +57,36 @@ public class CustomIjKeyListener implements KeyListener {
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_R) {
             control.repositionSlide();
             control.update();
+            e.consume();
             return;
         }
         // Autofit
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A) {
             control.measureFieldFit();
+            e.consume();
             return;
         }
         // Filter
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F) {
             control.toggleFilter();
+            e.consume();
             return;
         }
         // Measure
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_M) {
             control.measure();
+            e.consume();
             return;
         }
         // Standard ImageJ KeyEvents
-        e = getValidatedKey(e);
-        if (e != null) {
+        if (isAcceptedEvent(e)) {
             ijKeyListener.keyPressed(e);
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        e = getValidatedKey(e);
-        if (e != null) {
+        if (isAcceptedEvent(e)) {
             ijKeyListener.keyReleased(e);
         }
     }
