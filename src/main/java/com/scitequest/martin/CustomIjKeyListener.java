@@ -1,5 +1,6 @@
 package com.scitequest.martin;
 
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
@@ -76,6 +77,15 @@ public class CustomIjKeyListener implements KeyListener {
         if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_M) {
             control.measure();
             e.consume();
+            return;
+        }
+        /*
+         * This allows free use of the plus key, without interactions from modifiers
+         * such as the shift- or ctrl-key, on ISO-Keyboards.
+         */
+        if (e.getKeyCode() == KeyEvent.VK_PLUS) {
+            ijKeyListener.keyPressed(new KeyEvent((Component) e.getSource(), e.getID(), e.getWhen(), 0,
+                    KeyEvent.VK_PLUS, '+', e.getKeyLocation()));
             return;
         }
         // Standard ImageJ KeyEvents
