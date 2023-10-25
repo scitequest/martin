@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -49,6 +50,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.MouseInputListener;
 
 import com.scitequest.martin.Const;
+import com.scitequest.martin.CustomIjKeyListener;
 import com.scitequest.martin.GitInfo;
 import com.scitequest.martin.Version;
 import com.scitequest.martin.export.Data;
@@ -60,6 +62,7 @@ import com.scitequest.martin.view.IntegrityCheckResult.IntegrityCheckContext;
 import com.scitequest.martin.view.IntegrityCheckResult.IntegrityCheckError;
 
 import ij.ImagePlus;
+import ij.gui.ImageCanvas;
 import ij.gui.StackWindow;
 import net.imagej.patcher.LegacyInjector;
 
@@ -443,7 +446,11 @@ public final class Gui extends JFrame implements View, MouseInputListener {
                     Const.bundle.getString("infoText.noHoverInvertLut.text"),
                     Const.bundle.getString("infoText.noHoverZooming.text"),
                     Const.bundle.getString("infoText.noHoverMoveWholeImage.text"),
-                    Const.bundle.getString("infoText.noHoverRGBinput.text")
+                    Const.bundle.getString("infoText.noHoverRGBinput.text"),
+                    Const.bundle.getString("infoText.noHover.keyShortcut.reset.text"),
+                    Const.bundle.getString("infoText.noHover.keyShortcut.autofit.text"),
+                    Const.bundle.getString("infoText.noHover.keyShortcut.filter.text"),
+                    Const.bundle.getString("infoText.noHover.keyShortcut.measure.text")
             };
             noHoverMessageIndex = (noHoverMessageIndex + i) % guideLabels.length;
             // Wrap around
@@ -534,6 +541,8 @@ public final class Gui extends JFrame implements View, MouseInputListener {
             sw.getCanvas().setMagnification(magnification);
             sw.getCanvas().setSize(size);
         }
+        // Ensure the image is activated
+        iPlus.setActivated();
     }
 
     /**
@@ -543,6 +552,8 @@ public final class Gui extends JFrame implements View, MouseInputListener {
         // Creates an empty drawable image window including the canvas.
         var gdc = new GuiDrawCanvas(control, iPlus, settings);
         var sw = new StackWindow(iPlus, gdc);
+        proxyImagejKeyListener(sw, control);
+
         sw.addWindowListener(new WindowListener() {
             @Override
             public void windowActivated(WindowEvent arg0) {
@@ -582,6 +593,24 @@ public final class Gui extends JFrame implements View, MouseInputListener {
         });
 
         this.stackWindow = Optional.of(sw);
+    }
+
+    private static void proxyImagejKeyListener(StackWindow sw, Controlable control) {
+        // Get original key listener of ImageJ
+        KeyListener ijKeyListener = sw.getKeyListeners()[0];
+        // Remove all listeners from the StackWindow
+        for (KeyListener listener : sw.getKeyListeners()) {
+            sw.removeKeyListener(listener);
+        }
+        // Remove all listeners from the Canvas
+        ImageCanvas ic = sw.getCanvas();
+        for (KeyListener listener : ic.getKeyListeners()) {
+            ic.removeKeyListener(listener);
+        }
+        // Proxy the key listener for both the stack window and canvas
+        CustomIjKeyListener proxyListener = new CustomIjKeyListener(ijKeyListener, control);
+        sw.addKeyListener(proxyListener);
+        ic.addKeyListener(proxyListener);
     }
 
     @Override

@@ -53,7 +53,6 @@ public final class GuiDrawCanvas extends ImageCanvas {
      */
     public GuiDrawCanvas(Controlable control, ImagePlus iPlus, Settings settings) {
         super(iPlus);
-
         this.control = control;
         this.settings = settings;
         this.config = GraphicsEnvironment
