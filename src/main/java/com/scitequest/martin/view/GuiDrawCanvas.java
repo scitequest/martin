@@ -10,7 +10,6 @@ import java.awt.Transparency;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import com.scitequest.martin.CustomIjKeyListener;
 import com.scitequest.martin.DrawOptions;
 import com.scitequest.martin.settings.Settings;
 
@@ -54,8 +53,6 @@ public final class GuiDrawCanvas extends ImageCanvas {
      */
     public GuiDrawCanvas(Controlable control, ImagePlus iPlus, Settings settings) {
         super(iPlus);
-        removeKeyListener(ij);
-        addKeyListener(new CustomIjKeyListener(ij.getKeyListeners()[0], control));
         this.control = control;
         this.settings = settings;
         this.config = GraphicsEnvironment
