@@ -122,6 +122,12 @@ public final class SlideMask {
 
     private MaskExt maskParameters;
 
+    /**
+     * Constructor of SlideMask.
+     * Creates a slideMask in zero position by a given set of settings.
+     *
+     * @param settings Settings the new slideMask will be based on.
+     */
     SlideMask(Settings settings) {
         this.settings = settings;
         absoluteX = 0;
@@ -136,6 +142,10 @@ public final class SlideMask {
         setupCoordinates();
     }
 
+    /**
+     * Sets all parameters to the ones of a previously created slideMask and then
+     * calculates the coordinates for all elements.
+     */
     public void setupCoordinates() {
         int slideWidth = maskParameters.getSlideWidth();
         int slideHeight = maskParameters.getSlideHeight();
@@ -167,6 +177,7 @@ public final class SlideMask {
         slidePoints[3] = Point.of(ZERO_POSITION_X, slideHeight + ZERO_POSITION_Y);
         this.slide = new PolyShape(slidePoints, 1, MeasureShape.RECTANGLE);
 
+        // Setup of vertical divide lines if there are any.
         this.verticalDivideLines = new ArrayList<PolyShape>();
         int spacingInset = 0;
         Point[] verticalDivideLinePoints = new Point[2];
@@ -182,7 +193,7 @@ public final class SlideMask {
             verticalDivideLines.add(new PolyShape(verticalDivideLinePoints, 2, MeasureShape.LINE));
             spacingInset += verticalSpacing.get(i);
         }
-
+        // Setup of horizontal divide lines if there are any.
         this.horizontalDivideLines = new ArrayList<PolyShape>();
         spacingInset = 0;
         Point[] horizontalDivideLinePoints = new Point[2];
@@ -198,6 +209,7 @@ public final class SlideMask {
             horizontalDivideLines.add(new PolyShape(horizontalDivideLinePoints, 2, MeasureShape.LINE));
             spacingInset += horizontalSpacing.get(i);
         }
+        // Setup of spotFields.
         double spotRectWidth = spotFieldWidth / (double) spotFieldNColumns;
         double spotRectHeight = spotFieldHeight / (double) spotFieldNRows;
 
@@ -223,9 +235,11 @@ public final class SlideMask {
                 yPos += spotFieldHeight + horizontalSpacing.get(superRow);
             }
         }
-
+        // Setup of measureFields.
         measureFields = new ArrayList<PolyGrid>();
 
+        // Inset relative to spotField cells. This is used to center the measureFields
+        // within their cells.
         double shapeInsetX = (spotRectWidth - measureFieldWidth) / 2;
         double shapeInsetY = (spotRectHeight - measureFieldHeight) / 2;
         PolyGrid measureGrid;
@@ -263,7 +277,7 @@ public final class SlideMask {
 
             rowLabelGrids.add(rowGrid);
         }
-
+        // Setup of delRects.
         double noiseRectWidth = spotFields.get(0).getWidth() / DEL_RECT_COLS;
 
         topNoiseRects = new ArrayList<PolyGrid>();
@@ -569,6 +583,15 @@ public final class SlideMask {
         }
     }
 
+    /**
+     * Moves a selected element by a given number of pixels in x and y direction.
+     *
+     * @param element Element to be moved.
+     * @param deltaX  Horizontal pixels the element will be moved. Negative numbers
+     *                will move to the left, positive to the right.
+     * @param deltaY  Vertical pixels the element will be moved. Negative numbers
+     *                will move up, positive down.
+     */
     public void moveElement(PolyShape element, double deltaX, double deltaY) {
         element.movePoly(deltaX, deltaY);
         element.calculateOrbits(rCenter);
@@ -734,6 +757,12 @@ public final class SlideMask {
         return ret;
     }
 
+    /**
+     * This method returns the coordinates of all spotFields as a three-dimensional
+     * list of doubles.
+     *
+     * @return Double coordinates of all spotFields.
+     */
     public ArrayList<double[][][]> getSpotFieldCoordinates() {
         ArrayList<double[][][]> ret = new ArrayList<double[][][]>();
         for (PolyGrid sField : spotFields) {
@@ -742,6 +771,12 @@ public final class SlideMask {
         return ret;
     }
 
+    /**
+     * This method returns the coordinates of all backgroundRectangles as a
+     * two-dimensional list of doubles.
+     *
+     * @return Double coordinates of all backgroundRectangles.
+     */
     public ArrayList<double[][]> getBackgroundRectCoordinates() {
         ArrayList<double[][]> ret = new ArrayList<double[][]>();
 
@@ -759,6 +794,12 @@ public final class SlideMask {
         return ret;
     }
 
+    /**
+     * This returns the position of all column lables as a list of Points.
+     * This is currently used for the annotated images.
+     *
+     * @return Point-coordinates of all column labels.
+     */
     public ArrayList<Point[]> getColLabelPositions() {
         ArrayList<Point[]> ret = new ArrayList<Point[]>();
         for (PolyGrid cLabelGrid : colLabelGrids) {
@@ -767,6 +808,12 @@ public final class SlideMask {
         return ret;
     }
 
+    /**
+     * This returns the position of all row lables as a list of Points.
+     * This is currently used for the annotated images.
+     *
+     * @return Point-coordinates of all row labels.
+     */
     public ArrayList<Point[]> getRowLabelPositions() {
         ArrayList<Point[]> ret = new ArrayList<Point[]>();
         for (PolyGrid rLabelGrid : rowLabelGrids) {
@@ -800,6 +847,14 @@ public final class SlideMask {
         this.rCenter = rCenter;
     }
 
+    /**
+     * Draws the slide outline.
+     *
+     * @param stilus   Interface that allows drawing operations to be used on an
+     *                 imagePlus.
+     * @param polygonX X-coordinates of the polygon that will be drawn.
+     * @param polygonY X-coordinates of the polygon that will be drawn.
+     */
     private void drawSlide(Drawable stilus, int[] polygonX, int[] polygonY) {
         stilus.setColor(settings.getDisplaySettings().getSlideColor());
         double[][] slideCoordinates = getSlideCoordinates();
@@ -810,6 +865,16 @@ public final class SlideMask {
         stilus.drawPolygon(polygonX.clone(), polygonY.clone());
     }
 
+    /**
+     * Draws the individual spotFields
+     *
+     * @param stilus   Interface that allows drawing operations to be used on an
+     *                 imagePlus.
+     * @param polygonX X-coordinates of the polygon that will be drawn.
+     * @param polygonY X-coordinates of the polygon that will be drawn.
+     * @param lastPos  Last spotField position that is visible and therefore should
+     *                 be drawn.
+     */
     private void drawSpotFields(Drawable stilus, int[] polygonX, int[] polygonY, int lastPos) {
         ArrayList<double[][][]> spotField = getSpotFieldCoordinates();
         stilus.setColor(settings.getDisplaySettings().getSpotfieldColor());
@@ -824,6 +889,15 @@ public final class SlideMask {
         }
     }
 
+    /**
+     * Draws correctly rotated spotField annotations, which are numbers or letters
+     * for each row and column.
+     *
+     * @param stilus  Interface that allows drawing operations to be used on an
+     *                imagePlus.
+     * @param lastPos Last spotField position that is visible. This restricts which
+     *                annotations shall be visible.
+     */
     private void drawSpotFieldAnnotation(Drawable stilus, int lastPos) {
         ArrayList<Point[]> colLabelPos = getColLabelPositions();
         ArrayList<Point[]> rowLabelPos = getRowLabelPositions();
@@ -854,6 +928,13 @@ public final class SlideMask {
         }
     }
 
+    /**
+     * Draws all divide lines of a slide mask, both horizontally and vertically - if
+     * applicable.
+     *
+     * @param stilus Interface that allows drawing operations to be used on an
+     *               imagePlus.
+     */
     private void drawDivideLine(Drawable stilus) {
         stilus.setColor(settings.getDisplaySettings().getHalflineColor());
         int[] polyLineY = { 0, 0 };
@@ -881,6 +962,14 @@ public final class SlideMask {
 
     }
 
+    /**
+     * Draws all deletion rectangles if enabled.
+     *
+     * @param stilus   Interface that allows drawing operations to be used on an
+     *                 imagePlus.
+     * @param polygonX X-coordinates of the polygon that will be drawn.
+     * @param polygonY X-coordinates of the polygon that will be drawn.
+     */
     private void drawDelRects(Drawable stilus, int[] polygonX, int[] polygonY) {
         stilus.setColor(settings.getDisplaySettings().getDeletionRectangleColor());
         ArrayList<double[][]> delRects = getBackgroundRectCoordinates();
@@ -896,6 +985,14 @@ public final class SlideMask {
         }
     }
 
+    /**
+     * Draws all measureFields.
+     *
+     * @param stilus  Interface that allows drawing operations to be used on an
+     *                imagePlus.
+     * @param lastPos Last spotField position that is visible and therefore should
+     *                be drawn.
+     */
     private void drawMeasureFields(Drawable stilus, int lastPos) {
         stilus.setColor(settings.getDisplaySettings().getMeasureCircleColor());
         for (PolyGrid measureField : measureFields) {
@@ -940,8 +1037,12 @@ public final class SlideMask {
      * @param dO     the options what and how things should be drawn
      */
     public void drawElements(Drawable stilus, DrawOptions dO) {
+        // We added these two lists to shorten the code of some of the draw methods,
+        // practically this does not serve any other purpose and can be done within the
+        // draw methods as well.
         int[] polygonX = { 0, 0, 0, 0 };
         int[] polygonY = { 0, 0, 0, 0 };
+
         int lastIdx = settings.getMaskSettings().getLastMeasurePointIndex();
 
         if (dO.isDrawSlide()) {
