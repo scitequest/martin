@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema#",
+  "title": "Metadata",
+  "description": "Holds all information about the metadata of a slide measurement",
+  "$defs": {
+    "project": {
+      "type": "object",
+      "description": "Information about the project associated with the measurement. If no project was used must not be provided.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The project name"
+        },
+        "description": {
+          "type": "string",
+          "description": "The project description"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ]
+    },
+    "patient": {
+      "type": "object",
+      "description": "Information about the patient associated with the measurement",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The identifier of the patient as may be given from a hospital"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The full name of the patient"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Tags associated with the patient"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "tags"
+      ]
+    },
+    "image": {
+      "type": "object",
+      "description": "Information about the image",
+      "properties": {
+        "created": {
+          "type": "string",
+          "description": "ISO-8601 date time, when the image was taken."
+        },
+        "imager": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The imager device used to take the image"
+        },
+        "pixel_binning": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Pixel binning. A value of 2 represents 2x2 binning. If set to 1, this means no binning is applied sinc 1x1 binning don't alters the input image."
+        },
+        "exposure_time": {
+          "type": "string",
+          "format": "duration",
+          "description": "The exposure time during the image scan. Cannot be negative."
+        }
+      },
+      "required": [
+        "created",
+        "imager",
+        "pixel_binning",
+        "exposure_time"
+      ]
+    },
+    "quantity": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ]
+    },
+    "incubation": {
+      "type": "object",
+      "description": "Represents the metadata of the incubation procedure and holds information about the process",
+      "properties": {
+        "solution": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The solution that was used for incubation"
+        },
+        "stock_concentration": {
+          "$ref": "#/$defs/quantity",
+          "description": "The concentration of the shelf product"
+        },
+        "final_concentration": {
+          "$ref": "#/$defs/quantity",
+          "description": "The final concentration of the solution used"
+        },
+        "incubation_time": {
+          "type": "string",
+          "format": "duration",
+          "description": "The time taken for incubation. Cannot be negative."
+        }
+      },
+      "required": [
+        "solution",
+        "stock_concentration",
+        "final_concentration",
+        "incubation_time"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "The current semantic version of the file format specification"
+    },
+    "datetime": {
+      "type": "string",
+      "description": "ISO-8601 date time, when this measurement took place"
+    },
+    "project": {
+      "$ref": "#/$defs/project"
+    },
+    "patient": {
+      "$ref": "#/$defs/patient"
+    },
+    "image": {
+      "$ref": "#/$defs/image"
+    },
+    "incubations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/incubation"
+      }
+    }
+  },
+  "required": [
+    "version",
+    "datetime",
+    "patient",
+    "image",
+    "incubations"
+  ]
+}
