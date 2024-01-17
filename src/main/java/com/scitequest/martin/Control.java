@@ -365,6 +365,11 @@ public final class Control implements Controlable {
         return this.runType;
     }
 
+    /**
+     * Calculates the delta values between the slide masks current position and its
+     * new position. These values are then used to call moveSlide of the class
+     * SlideMask.
+     */
     @Override
     public void moveSlide(int x, int y) {
         int deltaX = x - slide.getAbsoluteX();
@@ -381,6 +386,7 @@ public final class Control implements Controlable {
         update(); // gCanvas.repaint();
     }
 
+    /** Analog rotation of slide mask via click-and-drag. */
     @Override
     public void rotateSlideViaMouse(int x, int y, int lastX, int lastY) {
         slide.rotateSlide(0, x, y, lastX, lastY, false);
@@ -402,6 +408,10 @@ public final class Control implements Controlable {
         return slide.getAbsoluteY();
     }
 
+    /**
+     * Checks if a click was made on any of the measure fields. By releasing the
+     * mouse this effect is reverted via the method releaseMouseGrip.
+     */
     @Override
     public void updateClickedMeasureCircles(int x, int y) {
         boolean clickedOnCircle = slide.isOnMeasureField(x, y);
@@ -410,6 +420,11 @@ public final class Control implements Controlable {
         }
     }
 
+    /**
+     * Checks if a click was made on any of the rectangular polygons, these include
+     * the whole slide and the delRects. By releasing the mouse this effect is
+     * reverted via the method releaseMouseGrip.
+     */
     @Override
     public void updateClickedRectPolygons(int x, int y) {
         SlideMask.Element selection = slide.isOnRectPolygon(x, y);
@@ -418,6 +433,10 @@ public final class Control implements Controlable {
         log.config(msg);
     }
 
+    /**
+     * If any element is grabbed this will cause it to be moved by the given values.
+     * If the whole slide was grabbed all elements will be moved instead.
+     */
     @Override
     public boolean moveGrabbedElement(int x, int y, int lastX, int lastY,
             int distanceX, int distanceY, boolean reposition) {
@@ -427,6 +446,7 @@ public final class Control implements Controlable {
         return hasMoved;
     }
 
+    /** This releases all grabbed elements. */
     @Override
     public void releaseMouseGrip() {
         String msg = String.format("User released grabbed elements. Current position of slide:"
@@ -436,21 +456,33 @@ public final class Control implements Controlable {
         slide.releaseGrip();
     }
 
+    /**
+     * Initiates the fitting algorithm. This effectively positions all measureFields
+     * to the highest signal in their immediate neighbourhood i.E. within their
+     * respective spotField cell.
+     */
     @Override
     public void measureFieldFit() {
         log.config("Initiated fitting algorithm");
         // Guard against empty image
         ensureImageOpen();
 
+        // Copies the image and makes sure its LUT is the same as the original image.
         ImagePlus iPlus = this.imagePlus.get().duplicate();
         if (settings.getMeasurementSettings().isInvertLut()) {
             setBlackValueHigh(iPlus);
         }
         ImageProcessor iProc = iPlus.getProcessor();
 
+        // Effectively defines the bounds the measureFields are allowed to be moved in
+        // this algorithm.
         ArrayList<PolyGrid> spotFields = slide.getSpotFields();
+
         ArrayList<PolyGrid> measureFields = slide.getMeasureFields();
 
+        // Since the shape of the measureFields is uniform for an individual slideMask
+        // we just copy the first measureFields parameters here to use it for all
+        // measureField positions further on.
         PolyShape measureGridElement = measureFields.get(0).getGridElement(0, 0);
         double radius = measureFields.get(0).getShapeWidth() / 2;
 
@@ -480,6 +512,8 @@ public final class Control implements Controlable {
         int lastIdx = settings.getMaskSettings().getLastMeasurePointIndex();
         int nCols = spotFields.get(0).getColumns();
 
+        // For all spotfields for each row and col search the highest value position of
+        // the corresponding measureField.
         for (int field = 0; field < measureFields.size(); field++) {
             for (int row = 0; row < spotFields.get(field).getRows(); row++) {
                 for (int col = 0; col < nCols; col++) {
@@ -487,13 +521,16 @@ public final class Control implements Controlable {
                         row = spotFields.get(field).getRows();
                         break;
                     }
+                    // Boundaries the fitting takes place.
                     PolyShape searchPerimeter = spotFields.get(field).getGridElement(row, col)
                             .shrinkByShape(measureFields.get(field).getGridElement(row, col));
 
                     SearchArea searchArea = SearchArea.of(this, iPlus, searchPerimeter, measureGridElement, radius,
                             hWidth, hHeight, widthRatio, heightRatio);
 
+                    // Calculates the center of the highest value position
                     Point maxPos = searchArea.searchForAbsoluteMax();
+                    // Relocates the measureField to the highest value position
                     measureFields.get(field).getGridElement(row, col).moveToCenter(maxPos);
                 }
             }
@@ -503,6 +540,14 @@ public final class Control implements Controlable {
         update();
     }
 
+    /**
+     * Subtracts each pixel value of a given image by the mean pixel value of given
+     * set of deletionRectangles.
+     *
+     * @param iPlus              The image the noise reduction will take place on.
+     * @param deletionRectangles A set of rectangles which are positioned on the
+     *                           background of an image.
+     */
     private static void subtractBackground(ImagePlus iPlus, List<Polygon> deletionRectangles) {
         log.config("Initiate subtractBackground.");
 
@@ -696,6 +741,18 @@ public final class Control implements Controlable {
         }
     }
 
+    /**
+     * Exports all enabled files of a measurements into a given directory.
+     * Files can be enabled and disabled via the options menu.
+     *
+     * @param exportDir      Directory in which the export will be conducted.
+     * @param metadata       Metadata of the measurement.
+     * @param parameters     Positional metadata of the measurement.
+     * @param data           Raw measure data for each position of the measurement.
+     * @param dataStatistics Aggregated measure data across all spotfields of a
+     *                       measurement.
+     * @return true if the export has been successful.
+     */
     public boolean exportIntoFolder(Path exportDir,
             Metadata metadata, Parameters parameters,
             Data data, DataStatistics dataStatistics) {
@@ -763,6 +820,16 @@ public final class Control implements Controlable {
         return true;
     }
 
+    /**
+     * Initiates the measurement with the current position of all elements of the
+     * slideMask and the values set for metadata.
+     *
+     * @param metadata       Metadata of the measurement.
+     * @param parameters     Positional metadata of the measurement.
+     * @param data           Raw measure data for each position of the measurement.
+     * @param dataStatistics Aggregated measure data across all spotfields of a
+     *                       measurement.
+     */
     public void export(Metadata metadata, Parameters parameters,
             Data data, DataStatistics dataStatistics) {
         log.info(String.format("Initiating export of measurements with metadata %s",
@@ -851,6 +918,15 @@ public final class Control implements Controlable {
         return Data.fromMeasurepoints(values);
     }
 
+    /**
+     * Gets the positional data of each measureField and returns it as an instance
+     * of imageStatistics.
+     *
+     * @param iPlus The image the measurement takes place on.
+     * @param spot  The measureField the positional metadata shall be extracted
+     *              from.
+     * @return Positional metadata of a given measureField.
+     */
     private static ImageStatistics getSpotStats(ImagePlus iPlus, Geometry spot) {
         if (spot instanceof Circle) {
             Circle circleSpot = (Circle) spot;
@@ -922,6 +998,9 @@ public final class Control implements Controlable {
                 data, DataStatistics.analyze(data));
     }
 
+    /**
+     * Initiates measuring process.
+     */
     @Override
     public void measure() {
         ImagePlus iPlus = ensureImageOpen().duplicate();
@@ -949,6 +1028,11 @@ public final class Control implements Controlable {
         IJ.showStatus("Opened ExportGui");
     }
 
+    /**
+     * Inverts the LUT it hasn't already been inverted.
+     *
+     * @param iPlus Image the LUT shall be inverted on.
+     */
     private static void setBlackValueHigh(ImagePlus iPlus) {
         if (!iPlus.isInvertedLut()) {
             log.config("Inverting the lookup-table.");
@@ -959,6 +1043,9 @@ public final class Control implements Controlable {
         }
     }
 
+    /**
+     * Exports an instance of project to a given path.
+     */
     @Override
     public void exportProject(ProjectExt proj, Path path) {
         try {
@@ -994,6 +1081,11 @@ public final class Control implements Controlable {
         }
     }
 
+    /**
+     * Initiates an integrity check. This checks if a given measurement can be
+     * reproduced
+     * by its the original image and positional data.
+     */
     @Override
     public IntegrityCheckResult checkIntegrity(Path folder) {
         Path parametersPath = folder.resolve("parameters.json");
@@ -1028,6 +1120,19 @@ public final class Control implements Controlable {
         }
     }
 
+    /**
+     * This compares a the measurement files (data and data_statistics) of a given
+     * measurement with a reproduced measurement, using the positional data and a
+     * copy of the original image.
+     *
+     * @param folder     Directory of a singular measurement.
+     * @param iPlus      Original image.
+     * @param parameters Positional metadata of original measurement.
+     * @return Positive or negative integrity-check-result for each measurement
+     *         file.
+     * @throws IOException
+     * @throws IllegalArgumentException
+     */
     private HashMap<Path, Boolean> checkIntegrity(Path folder, ImagePlus iPlus, Parameters parameters)
             throws IOException, IllegalArgumentException {
         // Remeasure image based on the parameters
@@ -1090,6 +1195,9 @@ public final class Control implements Controlable {
         return settings.getProjectSettings().importProject(path);
     }
 
+    /**
+     * Exports a slideMask to a given directory.
+     */
     @Override
     public void exportMask(MaskExt mask, Path path) {
         try {
@@ -1194,6 +1302,9 @@ public final class Control implements Controlable {
         view.ifPresent(v -> v.notifiySlideChanged());
     }
 
+    /**
+     * Closes this application.
+     */
     @Override
     public void exit() {
         log.info(String.format("Shutting down MARTin in %s mode", runType));
@@ -1315,6 +1426,10 @@ public final class Control implements Controlable {
         return this.isFilterEnabled;
     }
 
+    /**
+     * This restores all functions of the main gui, which were restricted while the
+     * optionGui was open.
+     */
     @Override
     public void optionsGuiClosed() {
         /*
@@ -1326,6 +1441,10 @@ public final class Control implements Controlable {
         view.get().toggleAllButtons(true);
     }
 
+    /**
+     * This restricts or releases some functionalities of the main gui in relation
+     * to the exportGui.
+     */
     public void exportGuiOpen(boolean exportGuiOpened) {
         if (exportGuiOpened) {
             view.get().toggleAllButtons(false);
