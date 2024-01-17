@@ -39,6 +39,11 @@ public final class JsonSchemaIT {
                 Path.of("src/test/resources/export/metadata.json"));
     }
 
+    /**
+     * Internal to this application, currently untested.
+     *
+     * @throws IOException if the schema or json could not be loaded from disk
+     */
     @Ignore
     @Test
     public void testParametersSchema() throws IOException {
@@ -46,14 +51,12 @@ public final class JsonSchemaIT {
                 Path.of("src/test/resources/export/parameters.json"));
     }
 
-    @Ignore
     @Test
     public void testDataSchema() throws IOException {
         assertValidSchema(Path.of("src/test/resources/schema/data.json"),
                 Path.of("src/test/resources/export/data.json"));
     }
 
-    @Ignore
     @Test
     public void testDataStatisticsSchema() throws IOException {
         assertValidSchema(Path.of("src/test/resources/schema/data_statistics.json"),

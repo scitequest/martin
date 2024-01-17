@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema#",
+  "description": "Holds the results data analysis",
+  "$defs": {
+    "datapoint_statistics": {
+      "type": "object",
+      "properties": {
+        "row": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The row of the grid"
+        },
+        "col": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The column of the grid"
+        },
+        "adjusted_average": {
+          "type": "number"
+        },
+        "adjusted_average_std_deviation": {
+          "type": "number"
+        },
+        "relative_adjusted_average_std_deviation": {
+          "type": "number"
+        },
+        "normalized_average": {
+          "type": "number"
+        },
+        "normalized_average_std_deviation": {
+          "type": "number"
+        },
+        "relative_normalized_average_std_deviation": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "values": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/datapoint_statistics"
+      },
+      "minItems": 1
+    }
+  }
+}

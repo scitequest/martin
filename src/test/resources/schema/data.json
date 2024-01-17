@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema#",
+  "description": "Holds the datapoints of a measurement",
+  "$defs": {
+    "datapoint": {
+      "type": "object",
+      "properties": {
+        "spot": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The spotfield this datapoint pertains to"
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The row of the grid"
+        },
+        "col": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The column of the grid"
+        },
+        "min": {
+          "type": "number",
+          "description": "The minimum value that was measured within the area"
+        },
+        "max": {
+          "type": "number",
+          "description": "The maximum value that was measured within the area"
+        },
+        "mean": {
+          "type": "number",
+          "description": "The mean of the measurement area"
+        },
+        "std_deviation": {
+          "type": "number",
+          "description": "The standard deviation of all measurement values"
+        },
+        "mean_minus_min": {
+          "type": "number",
+          "description": "Mean value subtracted by minimumValue of Dataset"
+        },
+        "normalized_mean": {
+          "type": "number",
+          "description": "Internally normalized mean value of spot relative to its set"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "values": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/datapoint"
+      },
+      "minItems": 1
+    }
+  }
+}

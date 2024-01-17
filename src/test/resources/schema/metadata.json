@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema#",
   "title": "Metadata",
   "description": "Holds all information about the metadata of a slide measurement",
-  "definitions": {
+  "$defs": {
     "project": {
       "type": "object",
       "description": "Information about the project associated with the measurement. If no project was used must not be provided.",
@@ -109,11 +109,11 @@
           "description": "The solution that was used for incubation"
         },
         "stock_concentration": {
-          "$ref": "#/definitions/quantity",
+          "$ref": "#/$defs/quantity",
           "description": "The concentration of the shelf product"
         },
         "final_concentration": {
-          "$ref": "#/definitions/quantity",
+          "$ref": "#/$defs/quantity",
           "description": "The final concentration of the solution used"
         },
         "incubation_time": {
@@ -142,18 +142,18 @@
       "description": "ISO-8601 date time, when this measurement took place"
     },
     "project": {
-      "$ref": "#/definitions/project"
+      "$ref": "#/$defs/project"
     },
     "patient": {
-      "$ref": "#/definitions/patient"
+      "$ref": "#/$defs/patient"
     },
     "image": {
-      "$ref": "#/definitions/image"
+      "$ref": "#/$defs/image"
     },
     "incubations": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/incubation"
+        "$ref": "#/$defs/incubation"
       }
     }
   },
