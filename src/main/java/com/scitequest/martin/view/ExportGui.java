@@ -186,7 +186,7 @@ public final class ExportGui extends JDialog {
 
         // ---- sampleId ----
         sampleId.putClientProperty("JTextField.showClearButton", true);
-        sampleId.putClientProperty("JTextField.placeholderText", "SM67");
+        sampleId.putClientProperty("JTextField.placeholderText", "CS001");
         mainMetadata.add(sampleId, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(0, 0, 5, 5), 0, 0));
@@ -212,7 +212,7 @@ public final class ExportGui extends JDialog {
                 new Insets(0, 0, 5, 0), 0, 0));
 
         // ---- name ----
-        name.putClientProperty("JTextField.placeholderText", "John Doe");
+        name.putClientProperty("JTextField.placeholderText", "control sample 1");
         name.putClientProperty("JTextField.showClearButton", true);
         mainMetadata.add(name, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
