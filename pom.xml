@@ -13,7 +13,7 @@
 
   <groupId>com.scitequest</groupId>
   <artifactId>martin</artifactId>
-  <version>0.11.0</version>
+  <version>1.0.0</version>
 
   <name>MARTin</name>
   <description>An application for the quantification of Microarrays based on ImageJ 2.x.</description>
