@@ -1,5 +1,7 @@
 package com.scitequest.martin.view;
 
+import java.util.Locale;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -31,7 +33,7 @@ public final class InputLimitations extends PlainDocument {
         }
 
         if (!allowUpperCase) {
-            str = str.toLowerCase();
+            str = str.toLowerCase(Locale.ENGLISH);
         }
         String retString = "";
         for (int i = 0; i < str.length(); i++) {

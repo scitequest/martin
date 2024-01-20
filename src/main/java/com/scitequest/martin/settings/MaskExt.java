@@ -3,6 +3,7 @@ package com.scitequest.martin.settings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -227,7 +228,7 @@ public final class MaskExt implements JsonExportable {
      * @return the normalized name
      */
     public String getNormalizedName() {
-        return name.trim().toLowerCase();
+        return name.trim().toLowerCase(Locale.ENGLISH);
     }
 
     static MaskExt fromJson(JsonObject obj) throws JsonParseException {
