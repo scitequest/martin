@@ -1,5 +1,7 @@
 package com.scitequest.martin.export;
 
+import java.util.Locale;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 
@@ -15,7 +17,7 @@ public final class Quantity implements JsonExportable {
         NANO_MOL_PER_LITRE;
 
         public String toSnakeCase() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ENGLISH);
         }
 
         @Override
@@ -53,15 +55,7 @@ public final class Quantity implements JsonExportable {
                 }
                 break;
             case MOL_PER_LITRE:
-                if (value < 0) {
-                    throw new IllegalArgumentException("Molarity cannot be negative");
-                }
-                break;
             case MICRO_MOL_PER_LITRE:
-                if (value < 0) {
-                    throw new IllegalArgumentException("Molarity cannot be negative");
-                }
-                break;
             case NANO_MOL_PER_LITRE:
                 if (value < 0) {
                     throw new IllegalArgumentException("Molarity cannot be negative");
@@ -116,7 +110,7 @@ public final class Quantity implements JsonExportable {
 
     public static Quantity fromJson(JsonObject obj) {
         double value = obj.getJsonNumber("value").doubleValue();
-        Unit unit = Unit.valueOf(obj.getString("unit").toUpperCase());
+        Unit unit = Unit.valueOf(obj.getString("unit").toUpperCase(Locale.ENGLISH));
         return new Quantity(value, unit);
     }
 

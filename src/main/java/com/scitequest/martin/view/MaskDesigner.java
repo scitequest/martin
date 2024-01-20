@@ -761,7 +761,7 @@ public final class MaskDesigner extends JDialog implements ListDialog {
 
     private void synchronizeMeasureShapeInformation(int index) {
         // Disable the measure field height spinner if using circle shape
-        if (shape.getSelectedItem() == MeasureShape.CIRCLE.toString()) {
+        if (shape.getSelectedItem().equals(MeasureShape.CIRCLE.toString())) {
             spotHeightSpinner.setEnabled(false);
             // If we just changed to the circle shape we have to set the width
             // to the minimum of width and height
